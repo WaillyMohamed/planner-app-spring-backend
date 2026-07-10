@@ -1,9 +1,11 @@
 📘 Planner Scheduling App
+
 An intelligent scheduling system built with Java + Spring Boot that automatically organizes a user’s day based on different types of tasks, deadlines, pacing rules, daily routines, fixed appointments, and personal availability.
 
 This project is designed to evolve into a full productivity assistant capable of generating optimized daily planners.
 
 🚀 Features
+
 ✔ Three Task Types
 The system supports multiple task categories, each with unique scheduling behavior:
 
@@ -40,6 +42,7 @@ Includes:
 These tasks cannot be moved and act as hard constraints in the schedule.
 
 📅 Planner System
+
 A Planner represents a single day in the user’s schedule.
 Each planner contains a list of ScheduledTaskInstance objects — the actual placed time blocks for that day.
 
