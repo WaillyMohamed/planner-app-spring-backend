@@ -5,12 +5,15 @@
 
 package entity.task;
 
+import entity.ScheduledTaskInstance;
+import entity.UserAvailability;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "deadline_task")
@@ -38,8 +41,9 @@ public class DeadlineTask extends Task {
         this.pacing = pacing;
     }
 
-
-    //public abstract List<ScheduledTaskInstance> generateInstances(UserAvailability availability);
-
+    @Override
+    public List<ScheduledTaskInstance> generateInstances(UserAvailability availability) {
+        return List.of();
+    }
 
 }
