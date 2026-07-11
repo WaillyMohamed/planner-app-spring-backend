@@ -6,6 +6,7 @@ package entity.task;
 
 
 import entity.ScheduledTaskInstance;
+import entity.UserAvailability;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
