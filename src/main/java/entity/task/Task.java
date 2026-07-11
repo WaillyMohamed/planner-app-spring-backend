@@ -1,11 +1,18 @@
+/*
+    Description: Abstract class that future Task types inherit from.
+*/
+
 package entity.task;
 
 
+import entity.ScheduledTaskInstance;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -80,6 +87,6 @@ public abstract class Task {
         this.priority = priority;
     }
 
-    //public abstract List<ScheduledTaskInstance> generateInstances(UserAvailability availability);
+    public abstract List<ScheduledTaskInstance> generateInstances(UserAvailability availability);
 
 }
