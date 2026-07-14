@@ -22,6 +22,7 @@ public class ScheduledTaskInstance {
 
     private LocalTime endTime;
     private int duration;
+    private LocalDate date;
 
     public LocalDate getDate() {
         return date;
@@ -31,7 +32,7 @@ public class ScheduledTaskInstance {
         this.date = date;
     }
 
-    private LocalDate date;
+
 
     public int getDuration() {
         return duration;
