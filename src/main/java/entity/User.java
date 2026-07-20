@@ -1,6 +1,8 @@
 package entity;
 
+import entity.task.DailyTask;
 import entity.task.DeadlineTask;
+import entity.task.ScheduledTask;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,8 +26,13 @@ public class User {
     @NotBlank
     private String email; // must be unique
 
-    private ArrayList<DeadlineTask> deadlines;
 
+    private UserAvailability availability;
+
+    private ArrayList<DeadlineTask> deadlines;
+    private ArrayList<DailyTask> dailyTasks;
+    private ArrayList<ScheduledTask>  scheduledTasks;
+    private ArrayList<ScheduledTaskInstance> instances;
     // Add a list of Planners here
     private ArrayList<Planner> planners;
 

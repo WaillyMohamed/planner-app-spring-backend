@@ -32,8 +32,6 @@ public class ScheduledTaskInstance {
         this.date = date;
     }
 
-
-
     public int getDuration() {
         return duration;
     }
