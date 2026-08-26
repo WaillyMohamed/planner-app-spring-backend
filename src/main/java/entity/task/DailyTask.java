@@ -33,6 +33,8 @@ public class DailyTask extends Task{
         ScheduledTaskInstance instance = new ScheduledTaskInstance();
         instance.setDuration(this.getDuration());
         instance.setTask(this);
+        instance.setIntensity(this.getIntensity());
+        instance.setPriority(this.getPriority());
         instances.add(instance);
         return instances;
 

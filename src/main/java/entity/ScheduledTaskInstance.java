@@ -18,6 +18,24 @@ public class ScheduledTaskInstance {
     private Task task; // Reference to the deadline task, daily task, or scheduled task
     private Planner planner; // the day it belongs to
 
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public int getIntensity() {
+        return intensity;
+    }
+
+    public void setIntensity(int intensity) {
+        this.intensity = intensity;
+    }
+
+    private int priority;
+    private int intensity;
     private LocalTime startTime;
 
     private LocalTime endTime;

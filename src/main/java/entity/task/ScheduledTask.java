@@ -5,6 +5,7 @@ import entity.UserAvailability;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -13,6 +14,9 @@ import java.util.List;
 @Entity
 @Table(name = "Scheduled_Task")
 public class ScheduledTask extends Task{
+    // Represents a task with a fixed date and fixed time chosen by the user
+    // Does not need the scheduler to decide when it happens
+
 
     private LocalDate date;
     private LocalTime startTime;
@@ -46,12 +50,20 @@ public class ScheduledTask extends Task{
     public List<ScheduledTaskInstance> generateInstances(UserAvailability availability) {
         ArrayList<ScheduledTaskInstance> instances = new ArrayList<>();
         ScheduledTaskInstance instance = new ScheduledTaskInstance();
-        instance.setDuration(this.getDuration());
+        instance.setDuration( (int) Duration.between(startTime, endTime).toMinutes());
         instance.setTask(this);
         instance.setStartTime(this.startTime);
         instance.setEndTime(this.endTime);
         instance.setDate(this.date);
+        instance.setIntensity(this.getIntensity());
+        instance.setPriority(this.getPriority());
         instances.add(instance);
         return instances;
     }
+
+    public boolean validateAgainstAvailability(UserAvailability availability) {
+        return !(startTime.isBefore(availability.getStartTime()) || endTime.isAfter(availability.getEndTime()));
+    }
+
+
 }
