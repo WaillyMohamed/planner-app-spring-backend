@@ -61,9 +61,20 @@ public class DeadlineTask extends Task {
                 remainder -= remainder;
             }
             instance.setTask(this);
+            instance.setDuration(this.getDuration());
+            instance.setIntensity(this.getIntensity());
+            instance.setPriority(this.getPriority());
             instances.add(instance);
         }
         return instances;
+    }
+
+    public boolean validateDeadline(LocalDate deadline) {
+        return (deadline != null ) && (deadline.isAfter(LocalDate.now()) || deadline.isEqual(LocalDate.now()));
+    }
+
+    public boolean validatePacing(){
+        return (pacing > 0) && pacing <= getDuration();
     }
 
 }
