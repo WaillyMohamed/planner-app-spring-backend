@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -26,10 +27,44 @@ public class Planner {
     private User user;
 
     @NotNull
-    private ArrayList<ScheduledTaskInstance> instances;
+    private ArrayList<ScheduledTaskInstance> instances = new ArrayList<>();
 
-    public void addInstance(@NotNull ScheduledTaskInstance instance) {
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public ArrayList<ScheduledTaskInstance> getInstances() {
+        return instances;
+    }
+
+    public void setInstances(ArrayList<ScheduledTaskInstance> instances) {
+        this.instances = instances;
+    }
+
+
+    public void addInstance(ScheduledTaskInstance instance) {
+        // Set the instance's planner, date, and add instance to the planner list
+        instance.setPlanner(this);
+        instance.setDate(date);
+
         this.instances.add(instance);
+
+        // Sort the instances by start time
+        this.instances.sort(Comparator.comparing(ScheduledTaskInstance::getStartTime,
+                Comparator.nullsLast(Comparator.naturalOrder())));
+
     }
     public void removeInstance(@NotNull ScheduledTaskInstance instance) {
         this.instances.remove(instance);
