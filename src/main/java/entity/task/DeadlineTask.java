@@ -61,7 +61,6 @@ public class DeadlineTask extends Task {
                 remainder -= remainder;
             }
             instance.setTask(this);
-            instance.setDuration(this.getDuration());
             instance.setIntensity(this.getIntensity());
             instance.setPriority(this.getPriority());
             instances.add(instance);
