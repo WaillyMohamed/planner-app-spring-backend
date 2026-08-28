@@ -21,7 +21,7 @@ The scheduler automatically splits these tasks into multiple sessions and distri
 
 2. DailyTask
 Recurring tasks that appear every day.
-- Includes:
+Includes:
 - Duration
 - Priority
 - Intensity
