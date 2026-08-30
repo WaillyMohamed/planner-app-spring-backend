@@ -26,6 +26,13 @@ public class User {
     @NotBlank
     private String email; // must be unique
 
+    public ArrayList<Planner> getPlanners() {
+        return planners;
+    }
+
+    public void setPlanners(ArrayList<Planner> planners) {
+        this.planners = planners;
+    }
 
     private UserAvailability availability;
 

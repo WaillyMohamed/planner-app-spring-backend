@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 public class PlannerTest {
@@ -48,6 +49,7 @@ public class PlannerTest {
         assertEquals(instance_1, planner.getInstances().get(1));
         assertEquals(test_null, planner.getInstances().get(2));
 
+        assertNotNull(planner.getInstances());
 
 
     }
