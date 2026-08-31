@@ -3,10 +3,13 @@ package service;
 import entity.Planner;
 import entity.ScheduledTaskInstance;
 import entity.User;
+import entity.task.DailyTask;
 import entity.task.ScheduledTask;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SchedulingService {
@@ -38,5 +41,38 @@ public class SchedulingService {
         // add the instance to the planner
         planner.addInstance(scheduledInstance);
         return scheduledInstance;
+    }
+
+    public List<ScheduledTaskInstance> placeDailyTask(User user, DailyTask task){
+        List<ScheduledTaskInstance> createdInstances = new ArrayList<>();
+
+        LocalDate current = task.getStartDate();
+        LocalDate end = task.getEndDate();
+
+        while (!current.isAfter(end)){ // Loops until we reach the day after the end date
+            Planner planner = plannerService.getOrCreatePlannerForDate(user, current);
+
+            // Create an instance and set its attributes
+            ScheduledTaskInstance instance = new ScheduledTaskInstance();
+            instance.setTask(task);
+            instance.setDate(current);
+            instance.setDuration(task.getDuration());
+            instance.setIntensity(task.getIntensity());
+            instance.setPriority(task.getPriority());
+
+            // Set the time for the instance
+            instance.setStartTime(null);
+            instance.setEndTime(null);
+
+            planner.addInstance(instance);
+            createdInstances.add(instance);
+
+            current = current.plusDays(1);
+        }
+
+
+        return createdInstances;
+
+
     }
 }

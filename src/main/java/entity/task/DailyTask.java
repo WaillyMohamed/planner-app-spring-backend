@@ -5,6 +5,7 @@ import entity.UserAvailability;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,25 @@ public class DailyTask extends Task{
 
     private LocalTime preferStart;
     private LocalTime preferEnd;
+
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
 
     @Override
     public List<ScheduledTaskInstance> generateInstances(UserAvailability availability) {
