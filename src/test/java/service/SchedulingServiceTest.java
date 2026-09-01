@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SchedulingServiceTest {
     private PlannerService plannerService = new PlannerService();
+    private ConflictDetectionService conflictService = new ConflictDetectionService();
 
     @Test
     public void placeScheduledTaskTest() {
@@ -45,7 +46,7 @@ public class SchedulingServiceTest {
 
         // Create a real PlannerService
         Planner planner = user.getPlanners().get(0);
-        SchedulingService ss = new SchedulingService(plannerService);
+        SchedulingService ss = new SchedulingService(plannerService,conflictService );
         ScheduledTaskInstance tester = ss.placeScheduledTask(user, task);
 
         ScheduledTaskInstance tester2 = ss.placeScheduledTask(user, task2);

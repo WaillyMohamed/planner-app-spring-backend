@@ -26,14 +26,6 @@ public class User {
     @NotBlank
     private String email; // must be unique
 
-    public ArrayList<Planner> getPlanners() {
-        return planners;
-    }
-
-    public void setPlanners(ArrayList<Planner> planners) {
-        this.planners = planners;
-    }
-
     private UserAvailability availability;
 
     private ArrayList<DeadlineTask> deadlines;
@@ -42,5 +34,23 @@ public class User {
     private ArrayList<ScheduledTaskInstance> instances;
     // Add a list of Planners here
     private ArrayList<Planner> planners;
+
+
+    public UserAvailability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(UserAvailability availability) {
+        this.availability = availability;
+    }
+
+    public ArrayList<Planner> getPlanners() {
+        return planners;
+    }
+
+    public void setPlanners(ArrayList<Planner> planners) {
+        this.planners = planners;
+    }
+
 
 }

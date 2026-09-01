@@ -3,23 +3,29 @@ package service;
 import entity.Planner;
 import entity.ScheduledTaskInstance;
 import entity.User;
-import entity.session.DeadlineSession;
+
+import entity.UserAvailability;
 import entity.task.DailyTask;
 import entity.task.DeadlineTask;
 import entity.task.ScheduledTask;
 import org.springframework.stereotype.Service;
+import service.util.TimeWindow;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
 public class SchedulingService {
     // Business logic
     private final PlannerService plannerService;
+    private final ConflictDetectionService conflictService;
 
-    public SchedulingService(PlannerService plannerService) {
+    public SchedulingService(PlannerService plannerService, ConflictDetectionService conflictService) {
         this.plannerService = plannerService;
+        this.conflictService = conflictService;
     }
 
     public ScheduledTaskInstance placeScheduledTask (User user, ScheduledTask task){
@@ -78,38 +84,96 @@ public class SchedulingService {
 
     }
 
-    public List<DeadlineSession> generateSessions(DeadlineTask task){
-        List<DeadlineSession> sessions = new ArrayList<>();
-        // Each Deadline Session has its own duration decided by the intensity selected.
+    private List<TimeWindow> computeFreeWindows(Planner planner, UserAvailability availability) {
 
-        int total = task.getDuration();
-        int intensity = task.getIntensity();
+        LocalTime availStart = availability.getStartTime();
+        LocalTime availEnd = availability.getEndTime();
 
-        int sessionSize = intensity * 30; // Session time calculation
+        List<ScheduledTaskInstance> tasks = planner.getInstances();
 
-        int remaining = total;
+        // Sort tasks by start time
+        tasks.sort(Comparator.comparing(ScheduledTaskInstance::getStartTime,
+                Comparator.nullsLast(Comparator.naturalOrder())));
 
-        while (remaining > 0) {
-            DeadlineSession deadlineSession = new DeadlineSession();
-            deadlineSession.setDeadlineTask(task);
-            deadlineSession.setIntensity(intensity);
+        List<TimeWindow> windows = new ArrayList<>();
 
-            int size = Math.min(sessionSize, remaining); // If remaining time is less than the usual session size just use the remainder
-            deadlineSession.setDuration(size);
+        LocalTime cursor = availStart;
 
-            sessions.add(deadlineSession);
-            remaining -= size;
+        for (ScheduledTaskInstance t : tasks) {
+            if (t.getStartTime() == null) continue;
+
+            if (cursor.isBefore(t.getStartTime())) {
+                windows.add(new TimeWindow(cursor, t.getStartTime()));
+            }
+            cursor = t.getEndTime();
         }
-        return sessions;
+
+        // Last window
+        if (cursor.isBefore(availEnd)) {
+            windows.add(new TimeWindow(cursor, availEnd));
+        }
+
+        return windows;
     }
+
 
     public List<ScheduledTaskInstance> placeDeadlineTask(User user, DeadlineTask task){
         // Generate The Sessions
-        List<DeadlineSession> sessions = generateSessions(task);
+        List<ScheduledTaskInstance> createdInstances = task.generateInstances(user.getAvailability());
+        List<ScheduledTaskInstance> placed = new ArrayList<>();
 
         // Schedule the Sessions
+        int sessions = createdInstances.size();
+        LocalDate current = task.getDeadline(); // Go from the deadline and work backwards per day
+
+        for (ScheduledTaskInstance session : createdInstances) {
+
+            boolean placedSession = false;
+
+            while (!placedSession) {
+
+                Planner planner = plannerService.getOrCreatePlannerForDate(user, current);
+
+                // 1. Compute free windows for this day
+                List<TimeWindow> freeWindows = computeFreeWindows(planner, user.getAvailability());
+
+                // 2. Try to fit the session in one of the windows
+                for (TimeWindow window : freeWindows) {
+
+                    if (window.durationInMinutes() >= session.getDuration()) {
+
+                        // Assign start/end times
+                        LocalTime start = window.getStart();
+                        LocalTime end = start.plusMinutes(session.getDuration());
+
+                        session.setDate(current);
+                        session.setStartTime(start);
+                        session.setEndTime(end);
+
+                        // Check conflicts
+                        if (!conflictService.hasConflictWithPlanner(planner, session)) {
+                            planner.addInstance(session);
+                            placed.add(session);
+                            placedSession = true;
+                            break;
+                        }
+                    }
+                }
+
+                // 3. If not placed, move backwards one day
+                if (!placedSession) {
+                    current = current.minusDays(1);
+
+                    // Optional: fail if we go too far back
+                    if (current.isBefore(LocalDate.now())) {
+                        throw new RuntimeException("Cannot schedule DeadlineTask before today.");
+                    }
+                }
+            }
+        }
 
         // Place Sessions into planners
-        return null;
+        return placed;
     }
 }
+

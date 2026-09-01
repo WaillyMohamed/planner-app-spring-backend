@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DailyTaskPlacementTest {
     private PlannerService plannerService = new PlannerService();
+    private ConflictDetectionService conflictService = new ConflictDetectionService();
 
     @Test
     public void placeDailyTaskTest() {
@@ -31,7 +32,7 @@ public class DailyTaskPlacementTest {
         task.setPriority(3);
         task.setIntensity(2);
 
-        SchedulingService ss = new SchedulingService(plannerService);
+        SchedulingService ss = new SchedulingService(plannerService,  conflictService);
         List<ScheduledTaskInstance> tester = ss.placeDailyTask(user, task);
 
         assertEquals(30, tester.size());
