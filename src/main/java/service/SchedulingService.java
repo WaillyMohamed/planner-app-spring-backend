@@ -110,6 +110,6 @@ public class SchedulingService {
         // Schedule the Sessions
 
         // Place Sessions into planners
-
+        return null;
     }
 }
