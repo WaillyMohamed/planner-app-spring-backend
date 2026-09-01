@@ -3,7 +3,9 @@ package service;
 import entity.Planner;
 import entity.ScheduledTaskInstance;
 import entity.User;
+import entity.session.DeadlineSession;
 import entity.task.DailyTask;
+import entity.task.DeadlineTask;
 import entity.task.ScheduledTask;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +75,41 @@ public class SchedulingService {
 
         return createdInstances;
 
+
+    }
+
+    public List<DeadlineSession> generateSessions(DeadlineTask task){
+        List<DeadlineSession> sessions = new ArrayList<>();
+        // Each Deadline Session has its own duration decided by the intensity selected.
+
+        int total = task.getDuration();
+        int intensity = task.getIntensity();
+
+        int sessionSize = intensity * 30; // Session time calculation
+
+        int remaining = total;
+
+        while (remaining > 0) {
+            DeadlineSession deadlineSession = new DeadlineSession();
+            deadlineSession.setDeadlineTask(task);
+            deadlineSession.setIntensity(intensity);
+
+            int size = Math.min(sessionSize, remaining); // If remaining time is less than the usual session size just use the remainder
+            deadlineSession.setDuration(size);
+
+            sessions.add(deadlineSession);
+            remaining -= size;
+        }
+        return sessions;
+    }
+
+    public List<ScheduledTaskInstance> placeDeadlineTask(User user, DeadlineTask task){
+        // Generate The Sessions
+        List<DeadlineSession> sessions = generateSessions(task);
+
+        // Schedule the Sessions
+
+        // Place Sessions into planners
 
     }
 }
