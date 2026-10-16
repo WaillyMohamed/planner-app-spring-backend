@@ -98,11 +98,11 @@ public class SchedulingService {
         List<TimeWindow> windows = new ArrayList<>();
 
         LocalTime cursor = availStart;
-
+        // Iterate through the task instances from the current planner
         for (ScheduledTaskInstance t : tasks) {
             if (t.getStartTime() == null) continue;
 
-            if (cursor.isBefore(t.getStartTime())) {
+            if (cursor.isBefore(t.getStartTime())) { // If the cursor is before the task start time, make a time window ith cursor as beginning, start time as next
                 windows.add(new TimeWindow(cursor, t.getStartTime()));
             }
             cursor = t.getEndTime();
@@ -125,13 +125,17 @@ public class SchedulingService {
         // Schedule the Sessions
         int sessions = createdInstances.size();
         LocalDate current = task.getDeadline(); // Go from the deadline and work backwards per day
-
+        int intensity = task.getIntensity(); // How many sessions per day are allowed?
+        int session_per_day = 0;
         for (ScheduledTaskInstance session : createdInstances) {
-
             boolean placedSession = false;
-
             while (!placedSession) {
 
+                if(session_per_day == intensity) { // move backwards one day if we reached the max amount of sessions for that day.
+                    current = current.minusDays(1);
+                    session_per_day = 0; // reset the number of sessions.
+
+                }
                 Planner planner = plannerService.getOrCreatePlannerForDate(user, current);
 
                 // 1. Compute free windows for this day
@@ -154,7 +158,10 @@ public class SchedulingService {
                         if (!conflictService.hasConflictWithPlanner(planner, session)) {
                             planner.addInstance(session);
                             placed.add(session);
+                            session_per_day += 1; // Add 1 to the number of sessions per day if it is added.
                             placedSession = true;
+                            System.out.println("Sessions per day incremented by 1: " + session_per_day);
+
                             break;
                         }
                     }

@@ -35,4 +35,6 @@ public class UserAvailability {
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
+
+
 }

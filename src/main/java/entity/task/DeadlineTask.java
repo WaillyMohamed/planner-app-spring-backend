@@ -24,7 +24,7 @@ public class DeadlineTask extends Task {
     private LocalDate deadline;
 
     @Min(value = 1, message = "Pacing must be at least 1 minute per session.")
-    private int pacing; // Variable that stores each session time leading up to the duration
+    private int pacing; // Variable that stores each session time leading up to the duration in minutes
 
     public LocalDate getDeadline() { return deadline;}
 
