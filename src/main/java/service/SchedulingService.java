@@ -128,10 +128,12 @@ public class SchedulingService {
         int intensity = task.getIntensity(); // How many sessions per day are allowed?
         int session_per_day = 0;
         for (ScheduledTaskInstance session : createdInstances) {
-            boolean placedSession = false;
-            while (!placedSession) {
 
+            boolean placedSession = false;
+
+            while (!placedSession) {
                 if(session_per_day == intensity) { // move backwards one day if we reached the max amount of sessions for that day.
+                    // OR if the amount of sessions cannot fit in the current available time slots.
                     current = current.minusDays(1);
                     session_per_day = 0; // reset the number of sessions.
 
@@ -149,6 +151,8 @@ public class SchedulingService {
                         // Assign start/end times
                         LocalTime start = window.getStart();
                         LocalTime end = start.plusMinutes(session.getDuration());
+                         // We need to check the end of availability is before ^ this
+
 
                         session.setDate(current);
                         session.setStartTime(start);
@@ -160,8 +164,6 @@ public class SchedulingService {
                             placed.add(session);
                             session_per_day += 1; // Add 1 to the number of sessions per day if it is added.
                             placedSession = true;
-                            System.out.println("Sessions per day incremented by 1: " + session_per_day);
-
                             break;
                         }
                     }
