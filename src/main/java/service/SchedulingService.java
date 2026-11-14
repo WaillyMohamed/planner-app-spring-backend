@@ -225,8 +225,22 @@ public class SchedulingService {
     }
 
     public TimeWindow findPlacementWindow(List<TimeWindow> windows, int sessionDuration){
+        // Loop through windows
+        // Return the first window that fits the session duration
+        // Return null if none fits
 
+        for(TimeWindow window : windows){
+            if (window.durationInMinutes() >= sessionDuration) {
+                return window;
+            }
+        }
         return null;
+    }
+
+    public Planner placeSessionInPlanner(Planner planner, ScheduledTaskInstance instance){
+        planner.addInstance(instance);
+
+        return planner;
     }
 }
 
