@@ -28,7 +28,7 @@ public class SchedulingService {
         this.conflictService = conflictService;
     }
 
-    public ScheduledTaskInstance placeScheduledTask (User user, ScheduledTask task){
+    public ScheduledTaskInstance placeScheduledTask(User user, ScheduledTask task) {
         // Get the date from the task
         LocalDate date = task.getDate();
 
@@ -51,13 +51,13 @@ public class SchedulingService {
         return scheduledInstance;
     }
 
-    public List<ScheduledTaskInstance> placeDailyTask(User user, DailyTask task){
+    public List<ScheduledTaskInstance> placeDailyTask(User user, DailyTask task) {
         List<ScheduledTaskInstance> createdInstances = new ArrayList<>();
 
         LocalDate current = task.getStartDate();
         LocalDate end = task.getEndDate();
 
-        while (!current.isAfter(end)){ // Loops until we reach the day after the end date
+        while (!current.isAfter(end)) { // Loops until we reach the day after the end date
             Planner planner = plannerService.getOrCreatePlannerForDate(user, current);
 
             // Create an instance and set its attributes
@@ -117,7 +117,7 @@ public class SchedulingService {
     }
 
 
-    public List<ScheduledTaskInstance> placeDeadlineTask(User user, DeadlineTask task){
+    public List<ScheduledTaskInstance> placeDeadlineTask(User user, DeadlineTask task) {
         // Generate The Sessions
         List<ScheduledTaskInstance> createdInstances = task.generateInstances(user.getAvailability());
         List<ScheduledTaskInstance> placed = new ArrayList<>();
@@ -132,7 +132,7 @@ public class SchedulingService {
             boolean placedSession = false;
 
             while (!placedSession) {
-                if(session_per_day == intensity) { // move backwards one day if we reached the max amount of sessions for that day.
+                if (session_per_day == intensity) { // move backwards one day if we reached the max amount of sessions for that day.
                     // OR if the amount of sessions cannot fit in the current available time slots.
                     current = current.minusDays(1);
                     session_per_day = 0; // reset the number of sessions.
@@ -151,7 +151,7 @@ public class SchedulingService {
                         // Assign start/end times
                         LocalTime start = window.getStart();
                         LocalTime end = start.plusMinutes(session.getDuration());
-                         // We need to check the end of availability is before ^ this
+                        // We need to check the end of availability is before ^ this
 
 
                         session.setDate(current);
@@ -183,6 +183,50 @@ public class SchedulingService {
 
         // Place Sessions into planners
         return placed;
+    }
+
+    public boolean scheduleSessionForDay(ScheduledTaskInstance scheduledInstance, LocalDate date,
+                                         UserAvailability availability, Planner planner) {
+        /*
+
+        This method computes free windows and tries to fit the session into one window.
+        Then it assigns the start/end times and returns success/failure
+
+        */
+        boolean success = false;
+        // 1. Compute the Window
+        List<TimeWindow> freeWindows = computeFreeWindows(planner, availability);
+
+        // 2. Try to fit the session in one of the windows
+        for (TimeWindow window : freeWindows) {
+
+            // Check if the window is bigger or equal to the duration of the scheduled task instance.
+            if (window.durationInMinutes() >= scheduledInstance.getDuration()) {
+
+                // Assign start/end times
+                LocalTime start = window.getStart();
+                LocalTime end = start.plusMinutes(scheduledInstance.getDuration());
+                // We need to check the end of availability is before ^ this
+
+
+                scheduledInstance.setDate(planner.getDate());
+                scheduledInstance.setStartTime(start);
+                scheduledInstance.setEndTime(end);
+
+                // Check conflicts
+                if (!conflictService.hasConflictWithPlanner(planner, scheduledInstance)) {
+                    planner.addInstance(scheduledInstance); // Add the instance
+                    success = true;
+                    break;
+                }
+            }
+        }
+        return success;
+    }
+
+    public TimeWindow findPlacementWindow(List<TimeWindow> windows, int sessionDuration){
+
+        return null;
     }
 }
 
