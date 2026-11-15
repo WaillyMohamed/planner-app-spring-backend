@@ -1,0 +1,26 @@
+services:
+  db:
+    container_name: postgres-planner-db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: planner_db
+      POSTGRES_PASSWORD: shawarma
+      POSTGRES_DB: planner_db
+    volumes:
+      - db:/data/postgres
+    ports:
+      # Optional: make exposed port "5332:5432"
+      - "5532:5432"
+    networks:
+      - db
+    restart: unless-stopped
+
+# If you have more than one container and want them to communicate through
+# same network
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:
+  
