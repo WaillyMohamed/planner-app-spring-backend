@@ -1,10 +1,7 @@
 package entity;
 
 import entity.task.Task;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,6 +13,9 @@ public class ScheduledTaskInstance {
     private long id;
 
     private Task task; // Reference to the deadline task, daily task, or scheduled task
+
+    @ManyToOne
+    @JoinColumn(name = "planner_id")
     private Planner planner; // the day it belongs to
 
     private int priority;

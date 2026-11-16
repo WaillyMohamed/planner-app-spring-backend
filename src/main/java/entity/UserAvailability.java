@@ -20,6 +20,7 @@ public class UserAvailability {
     @NotNull
     private LocalTime endTime;
 
+
     public LocalTime getEndTime() {
         return endTime;
     }

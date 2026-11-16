@@ -1,9 +1,6 @@
 package entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import entity.task.Task;
 import jakarta.validation.constraints.NotNull;
 
@@ -23,10 +20,13 @@ public class Planner {
     @NotNull
     private LocalDate date;
 
-    @NotNull
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull
+    @OneToMany(mappedBy = "planner")
     private ArrayList<ScheduledTaskInstance> instances = new ArrayList<>();
 
     public LocalDate getDate() {
