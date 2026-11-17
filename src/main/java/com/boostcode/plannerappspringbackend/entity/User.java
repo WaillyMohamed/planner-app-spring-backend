@@ -1,14 +1,14 @@
-package entity;
+package com.boostcode.plannerappspringbackend.entity;
 
-import entity.task.DailyTask;
-import entity.task.DeadlineTask;
-import entity.task.ScheduledTask;
+
+import com.boostcode.plannerappspringbackend.entity.task.Task;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +26,10 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL) // If the user is gone, the user availability is gone
     private UserAvailability availability;
 
-    private ArrayList<DeadlineTask> deadlines;
-    private ArrayList<DailyTask> dailyTasks;
-    private ArrayList<ScheduledTask>  scheduledTasks;
-    private ArrayList<ScheduledTaskInstance> instances;
+    @OneToMany
+    private ArrayList<Task> tasks;
+
+
 
     // Add a list of Planners here
     @OneToMany(mappedBy = "user")

@@ -1,10 +1,12 @@
 package service;
 
-import entity.Planner;
-import entity.ScheduledTaskInstance;
-import entity.User;
-import entity.UserAvailability;
-import entity.task.DeadlineTask;
+import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
+import com.boostcode.plannerappspringbackend.entity.User;
+import com.boostcode.plannerappspringbackend.entity.UserAvailability;
+import com.boostcode.plannerappspringbackend.entity.task.DeadlineTask;
+import com.boostcode.plannerappspringbackend.service.ConflictDetectionService;
+import com.boostcode.plannerappspringbackend.service.PlannerService;
+import com.boostcode.plannerappspringbackend.service.SchedulingService;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;

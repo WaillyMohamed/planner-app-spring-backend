@@ -1,7 +1,6 @@
-package entity;
+package com.boostcode.plannerappspringbackend.entity;
 
 import jakarta.persistence.*;
-import entity.task.Task;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Duration;

@@ -1,16 +1,17 @@
 package service;
 
-import entity.Planner;
-import entity.ScheduledTaskInstance;
-import entity.User;
-import entity.task.DailyTask;
-import entity.task.ScheduledTask;
+import com.boostcode.plannerappspringbackend.entity.Planner;
+import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
+import com.boostcode.plannerappspringbackend.entity.User;
+import com.boostcode.plannerappspringbackend.entity.task.ScheduledTask;
+import com.boostcode.plannerappspringbackend.service.ConflictDetectionService;
+import com.boostcode.plannerappspringbackend.service.PlannerService;
+import com.boostcode.plannerappspringbackend.service.SchedulingService;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

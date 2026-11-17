@@ -1,15 +1,15 @@
-package service;
+package com.boostcode.plannerappspringbackend.service;
 
-import entity.Planner;
-import entity.ScheduledTaskInstance;
-import entity.User;
+import com.boostcode.plannerappspringbackend.entity.Planner;
+import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
+import com.boostcode.plannerappspringbackend.entity.User;
 
-import entity.UserAvailability;
-import entity.task.DailyTask;
-import entity.task.DeadlineTask;
-import entity.task.ScheduledTask;
+import com.boostcode.plannerappspringbackend.entity.UserAvailability;
+import com.boostcode.plannerappspringbackend.entity.task.DailyTask;
+import com.boostcode.plannerappspringbackend.entity.task.DeadlineTask;
+import com.boostcode.plannerappspringbackend.entity.task.ScheduledTask;
 import org.springframework.stereotype.Service;
-import service.util.TimeWindow;
+import com.boostcode.plannerappspringbackend.service.util.TimeWindow;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

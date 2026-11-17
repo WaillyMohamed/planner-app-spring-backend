@@ -1,7 +1,7 @@
-package service;
+package com.boostcode.plannerappspringbackend.service;
 
-import entity.Planner;
-import entity.User;
+import com.boostcode.plannerappspringbackend.entity.Planner;
+import com.boostcode.plannerappspringbackend.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

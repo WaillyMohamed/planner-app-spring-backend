@@ -1,8 +1,9 @@
 package entity.task;
 
 
-import entity.ScheduledTaskInstance;
-import entity.UserAvailability;
+import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
+import com.boostcode.plannerappspringbackend.entity.UserAvailability;
+import com.boostcode.plannerappspringbackend.entity.task.DeadlineTask;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

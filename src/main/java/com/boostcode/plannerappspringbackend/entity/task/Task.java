@@ -2,11 +2,11 @@
     Description: Abstract class that future Task types inherit from.
 */
 
-package entity.task;
+package com.boostcode.plannerappspringbackend.entity.task;
 
 
-import entity.ScheduledTaskInstance;
-import entity.UserAvailability;
+import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
+import com.boostcode.plannerappspringbackend.entity.UserAvailability;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

@@ -1,7 +1,7 @@
-package service;
+package com.boostcode.plannerappspringbackend.service;
 
-import entity.Planner;
-import entity.ScheduledTaskInstance;
+import com.boostcode.plannerappspringbackend.entity.Planner;
+import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;

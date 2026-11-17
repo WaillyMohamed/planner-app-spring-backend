@@ -1,7 +1,7 @@
-package entity.task;
+package com.boostcode.plannerappspringbackend.entity.task;
 
-import entity.ScheduledTaskInstance;
-import entity.UserAvailability;
+import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
+import com.boostcode.plannerappspringbackend.entity.UserAvailability;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 

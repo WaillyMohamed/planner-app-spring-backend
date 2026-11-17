@@ -3,10 +3,10 @@
     The purpose is to store tasks that must be completed before a deadline. The scheduler automatically splits these tasks into multiple sessions and distributes them across days before the deadline.
 */
 
-package entity.task;
+package com.boostcode.plannerappspringbackend.entity.task;
 
-import entity.ScheduledTaskInstance;
-import entity.UserAvailability;
+import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
+import com.boostcode.plannerappspringbackend.entity.UserAvailability;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;

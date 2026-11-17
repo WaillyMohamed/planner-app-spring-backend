@@ -1,4 +1,4 @@
-package entity;
+package com.boostcode.plannerappspringbackend.entity;
 
 import java.time.LocalTime;
 

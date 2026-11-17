@@ -1,4 +1,4 @@
-package service.util;
+package com.boostcode.plannerappspringbackend.service.util;
 
 import java.time.Duration;
 import java.time.LocalTime;

@@ -1,5 +1,7 @@
 package entity;
 
+import com.boostcode.plannerappspringbackend.entity.Planner;
+import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

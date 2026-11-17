@@ -1,6 +1,6 @@
-package entity;
+package com.boostcode.plannerappspringbackend.entity;
 
-import entity.task.Task;
+import com.boostcode.plannerappspringbackend.entity.task.Task;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -12,6 +12,8 @@ public class ScheduledTaskInstance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @ManyToOne
+    @JoinColumn(name = "task_id")
     private Task task; // Reference to the deadline task, daily task, or scheduled task
 
     @ManyToOne
