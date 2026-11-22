@@ -10,6 +10,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,11 +29,63 @@ public class TaskRepositoryTest {
     private TaskRepository taskRepository;
 
     @Test
-    public void saveTaskTest() {
+    public void saveDailyTaskClassTest(){
+        DailyTask dailyTask = new DailyTask();
+
+        // Set the information for the daily
+        dailyTask.setTitle("Yippeee Daily Task!");
+        dailyTask.setPriority(2);
+        dailyTask.setDuration(10);
+        dailyTask.setIntensity(2);
+        dailyTask.setStartDate(LocalDate.now());
+        DailyTask savedDailyTask = taskRepository.save(dailyTask);
+
+        assertNotNull(savedDailyTask.getId());
+
+        Optional<Task> dailyTaskOp = taskRepository.findById(savedDailyTask.getId());
+        assertTrue(dailyTaskOp.isPresent());
+
+        // Test the inheritance mapping
+        Task task = dailyTaskOp.get();
+        assertTrue(task instanceof DailyTask);
+
+        // Test Daily task attributes
+        assertEquals(dailyTaskOp.get().getTitle(), dailyTask.getTitle());
+
+    }
+
+    @Test
+    public void saveScheduledTaskClassTest(){
+        ScheduledTask scheduledTask = new ScheduledTask();
+
+        scheduledTask.setTitle("Yippeee Schedule Task!");
+        scheduledTask.setPriority(2);
+        scheduledTask.setDuration(15);
+        scheduledTask.setIntensity(9);
+        scheduledTask.setDate(LocalDate.now());
+        scheduledTask.setStartTime(LocalTime.of(8,2,1));
+        scheduledTask.setEndTime(LocalTime.of(9,2,1));
+        ScheduledTask savedScheduledTask = taskRepository.save(scheduledTask);
+
+        assertNotNull(savedScheduledTask.getId());
+
+        Optional<Task> scheduledTaskOp = taskRepository.findById(savedScheduledTask.getId());
+        assertTrue(scheduledTaskOp.isPresent());
+
+        // Test the inheritance mapping
+        Task task = scheduledTaskOp.get();
+        assertTrue(task instanceof ScheduledTask);
+
+        // Test Scheduled Task
+        assertEquals(scheduledTaskOp.get().getTitle(), scheduledTask.getTitle());
+    }
+
+
+    @Test
+    public void saveDeadlineTaskTest() {
+
         // Create different types of tasks and add save it into the repository
         DeadlineTask deadlineTask = new DeadlineTask();
-        DailyTask dailyTask = new DailyTask();
-        ScheduledTask scheduledTask = new ScheduledTask();
 
         // Set the information for deadline task
         deadlineTask.setDeadline(LocalDate.of(2027, 12, 19));
@@ -41,47 +94,24 @@ public class TaskRepositoryTest {
         deadlineTask.setDuration(500);
         deadlineTask.setPriority(3);
 
-        // Set the information for the daily
-        dailyTask.setTitle("Yippeee Daily Task!");
-        dailyTask.setPriority(2);
-        dailyTask.setDuration(10);
-        dailyTask.setIntensity(2);
-        scheduledTask.setTitle("Yippeee Schedule Task!");
-        scheduledTask.setPriority(2);
-        scheduledTask.setDuration(15);
-        scheduledTask.setIntensity(9);
-
         // Save the tasks
         DeadlineTask savedTask = taskRepository.save(deadlineTask);
-        DailyTask savedDailyTask = taskRepository.save(dailyTask);
-        ScheduledTask savedScheduledTask = taskRepository.save(scheduledTask);
 
         // Test if the ID was generated
         assertNotNull(savedTask.getId());
-        assertNotNull(savedDailyTask.getId());
-        assertNotNull(savedScheduledTask.getId());
 
         // Retrieve the task
         Optional<Task> deadlineTaskOp = taskRepository.findById(savedTask.getId());
         assertTrue(deadlineTaskOp.isPresent());
 
-        Optional<Task> dailyTaskOp = taskRepository.findById(savedDailyTask.getId());
-        assertTrue(dailyTaskOp.isPresent());
-
-        Optional<Task> scheduledTaskOp = taskRepository.findById(savedScheduledTask.getId());
-        assertTrue(scheduledTaskOp.isPresent());
-
+        // Testing inheritance mapping
+        // Test the inheritance mapping
+        Task task = deadlineTaskOp.get();
+        assertTrue(task instanceof DeadlineTask);
 
         // Test the different attributes of the deadline task
         assertEquals(deadlineTaskOp.get().getTitle(), deadlineTask.getTitle());
         assertEquals(deadlineTaskOp.get().getDuration(), deadlineTask.getDuration());
-
-        // Test Daily task attributes
-        assertEquals(dailyTaskOp.get().getTitle(), dailyTask.getTitle());
-
-        // Test Scheduled Task
-        assertEquals(scheduledTaskOp.get().getTitle(), scheduledTask.getTitle());
-
 
     }
 }
