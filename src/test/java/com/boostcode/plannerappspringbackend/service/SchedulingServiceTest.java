@@ -8,6 +8,7 @@ import com.boostcode.plannerappspringbackend.service.ConflictDetectionService;
 import com.boostcode.plannerappspringbackend.service.PlannerService;
 import com.boostcode.plannerappspringbackend.service.SchedulingService;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SchedulingServiceTest {
-    private PlannerService plannerService = new PlannerService();
+    @Autowired
+    private PlannerService plannerService;
+
     private ConflictDetectionService conflictService = new ConflictDetectionService();
 
     @Test

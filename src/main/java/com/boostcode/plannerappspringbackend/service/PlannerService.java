@@ -2,6 +2,7 @@ package com.boostcode.plannerappspringbackend.service;
 
 import com.boostcode.plannerappspringbackend.entity.Planner;
 import com.boostcode.plannerappspringbackend.entity.User;
+import com.boostcode.plannerappspringbackend.repository.PlannerRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -9,6 +10,11 @@ import java.time.LocalDate;
 @Service
 public class PlannerService {
     // Class is used to create or fetch planners for specific dates.
+    PlannerRepository plannerRepository;
+
+    public PlannerService(PlannerRepository plannerRepository) {
+        this.plannerRepository = plannerRepository;
+    }
 
     //  A method made for testing for the SchedulingServiceTest
     public Planner getOrCreatePlannerForDate(User user, LocalDate date) {
@@ -22,8 +28,9 @@ public class PlannerService {
         // Create a new planner if none exist
         Planner newPlanner = new Planner();
         newPlanner.setDate(date);
+        newPlanner.setUser(user);
         user.getPlanners().add(newPlanner);
-        return newPlanner;
+        return plannerRepository.save(newPlanner);
 
     }
 

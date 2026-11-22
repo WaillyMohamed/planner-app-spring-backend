@@ -8,6 +8,8 @@ import com.boostcode.plannerappspringbackend.service.ConflictDetectionService;
 import com.boostcode.plannerappspringbackend.service.PlannerService;
 import com.boostcode.plannerappspringbackend.service.SchedulingService;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -18,8 +20,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+@SpringBootTest
 public class DeadlineTaskPlacementTest {
-    private PlannerService plannerService = new PlannerService();
+    @Autowired
+    private PlannerService plannerService;
+
     private ConflictDetectionService conflictService = new ConflictDetectionService();
 
     @Test
