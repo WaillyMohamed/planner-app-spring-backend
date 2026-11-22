@@ -15,7 +15,7 @@ public class UserServiceTest {
     UserService userService;
 
     @Test
-    public void createUser() {
+    public void saveUserServiceTest() {
         User user = new User();
         user.setUsername("username");
         user.setPassword("password");

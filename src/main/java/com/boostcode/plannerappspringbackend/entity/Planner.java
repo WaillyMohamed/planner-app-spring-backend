@@ -19,6 +19,9 @@ public class Planner {
     @NotNull
     private LocalDate date;
 
+    public Long getId() {
+        return id;
+    }
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -26,7 +29,7 @@ public class Planner {
 
     @NotNull
     @OneToMany(mappedBy = "planner")
-    private ArrayList<ScheduledTaskInstance> instances = new ArrayList<>();
+    private List<ScheduledTaskInstance> instances = new ArrayList<>();
 
     public LocalDate getDate() {
         return date;
@@ -44,11 +47,11 @@ public class Planner {
         this.user = user;
     }
 
-    public ArrayList<ScheduledTaskInstance> getInstances() {
+    public List<ScheduledTaskInstance> getInstances() {
         return instances;
     }
 
-    public void setInstances(ArrayList<ScheduledTaskInstance> instances) {
+    public void setInstances(List<ScheduledTaskInstance> instances) {
         this.instances = instances;
     }
 
