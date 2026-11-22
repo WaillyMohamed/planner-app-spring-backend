@@ -1,11 +1,4 @@
 package com.boostcode.plannerappspringbackend.repository;
-/*
-    This class will be used to test the User Repository Class. It tests the following:
-    - Save a user
-    - Retrieve a User by ID
-    - Verifying the username and password (Might remove later)
- */
-
 import com.boostcode.plannerappspringbackend.entity.User;
 import com.boostcode.plannerappspringbackend.entity.UserAvailability;
 import org.junit.jupiter.api.Test;
@@ -18,6 +11,13 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+/*
+    This class will be used to test the User Repository Class. It tests the following:
+    - Save a user
+    - Retrieve a User by ID
+    - Verifying the username and password (Might remove later)
+ */
 
 @DataJpaTest
 @AutoConfigureTestDatabase(
