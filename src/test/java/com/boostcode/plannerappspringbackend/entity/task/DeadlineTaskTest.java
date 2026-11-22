@@ -1,4 +1,4 @@
-package entity.task;
+package com.boostcode.plannerappspringbackend.entity.task;
 
 
 import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DeadlineTaskTest {
     // Used for Unit Testing
-
 
 
     @Test

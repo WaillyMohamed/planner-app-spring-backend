@@ -1,4 +1,4 @@
-package service;
+package com.boostcode.plannerappspringbackend.service;
 
 import com.boostcode.plannerappspringbackend.entity.Planner;
 import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
