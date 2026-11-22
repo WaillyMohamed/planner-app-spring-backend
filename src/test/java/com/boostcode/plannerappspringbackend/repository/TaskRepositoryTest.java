@@ -65,6 +65,7 @@ public class TaskRepositoryTest {
         scheduledTask.setDate(LocalDate.now());
         scheduledTask.setStartTime(LocalTime.of(8,2,1));
         scheduledTask.setEndTime(LocalTime.of(9,2,1));
+
         ScheduledTask savedScheduledTask = taskRepository.save(scheduledTask);
 
         assertNotNull(savedScheduledTask.getId());

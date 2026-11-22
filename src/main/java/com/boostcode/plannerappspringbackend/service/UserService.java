@@ -31,11 +31,25 @@ public class UserService {
     public User createUser(User user) {
         return userRepository.save(user);
     }
-    /*
-    public User updateUser(User user) {
+
+    public User updateUser(Long id, User UpdatedUser) {
+        // Find existing user
+        Optional<User> user = userRepository.findById(id);
+        // Check if the user exists
+        if(user.isPresent()){
+            // Copy updated fields
+            user.get().setUsername(UpdatedUser.getUsername());
+            user.get().setPassword(UpdatedUser.getPassword());
+            user.get().setEmail(UpdatedUser.getEmail());
+            // Save
+            return userRepository.save(user.get());
+        }
+        else{
+            return userRepository.save(UpdatedUser);
+        }
 
     }
-    */
+
 
 
     public User getUserById(long id) {

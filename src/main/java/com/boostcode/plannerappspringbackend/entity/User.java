@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -27,11 +28,11 @@ public class User {
     private UserAvailability availability;
 
     @OneToMany
-    private ArrayList<Task> tasks;
+    private List<Task> tasks;
 
     // Add a list of Planners here
     @OneToMany(mappedBy = "user")
-    private ArrayList<Planner> planners;
+    private List<Planner> planners;
 
     public Long getId() {
         return id;
@@ -69,7 +70,7 @@ public class User {
         this.availability = availability;
     }
 
-    public ArrayList<Planner> getPlanners() {
+    public List<Planner> getPlanners() {
         return planners;
     }
 
