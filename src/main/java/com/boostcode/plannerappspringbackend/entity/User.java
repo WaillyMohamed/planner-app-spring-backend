@@ -2,6 +2,7 @@ package com.boostcode.plannerappspringbackend.entity;
 
 
 import com.boostcode.plannerappspringbackend.entity.task.Task;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -31,7 +32,8 @@ public class User {
     private List<Task> tasks;
 
     // Add a list of Planners here
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",
+    fetch = FetchType.EAGER)
     private List<Planner> planners;
 
     public Long getId() {

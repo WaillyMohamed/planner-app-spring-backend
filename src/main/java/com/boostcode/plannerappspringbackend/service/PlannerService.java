@@ -1,5 +1,6 @@
 package com.boostcode.plannerappspringbackend.service;
 
+import com.boostcode.plannerappspringbackend.dto.response.PlannerResponseDTO;
 import com.boostcode.plannerappspringbackend.entity.Planner;
 import com.boostcode.plannerappspringbackend.entity.User;
 import com.boostcode.plannerappspringbackend.repository.PlannerRepository;

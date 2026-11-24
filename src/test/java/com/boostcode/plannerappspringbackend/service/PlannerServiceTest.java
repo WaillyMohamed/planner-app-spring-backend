@@ -1,5 +1,7 @@
 package com.boostcode.plannerappspringbackend.service;
 
+import com.boostcode.plannerappspringbackend.dto.request.UserRequestDTO;
+import com.boostcode.plannerappspringbackend.dto.response.UserResponseDTO;
 import com.boostcode.plannerappspringbackend.entity.Planner;
 import com.boostcode.plannerappspringbackend.entity.User;
 import org.junit.jupiter.api.Test;
@@ -21,24 +23,49 @@ public class PlannerServiceTest {
 
     @Test
     public void savePlannerServiceTest() {
-        // Test the getOrCreatePLannerForDate()
-        User user = new User();
-        user.setPlanners(new ArrayList<Planner>());
-        user.setUsername("username");
-        user.setPassword("password");
-        user.setEmail("email");
-        userService.createUser(user);
 
+        // Create and persist a user
+        UserRequestDTO userRequestDTO =
+                new UserRequestDTO(
+                        "username",
+                        "password",
+                        "email"
+                );
 
-        Planner planner = plannerService.getOrCreatePlannerForDate(user, LocalDate.now());
+        UserResponseDTO userResponseDTO =
+                userService.createUser(userRequestDTO);
+
+        // Retrieve the actual persisted User entity
+        User user =
+                userService.getUserById(userResponseDTO.id());
+
+        // Create planner
+        Planner planner =
+                plannerService.getOrCreatePlannerForDate(
+                        user,
+                        LocalDate.now()
+                );
+
+        // Verify planner was created
         assertNotNull(planner);
-        assertEquals(planner.getDate(), LocalDate.now());
-        long oldId = planner.getId();
 
-        // Test if given different user that the existing planner isn't overwritten
-        planner = plannerService.getOrCreatePlannerForDate(user, LocalDate.now());
+        assertEquals(
+                LocalDate.now(),
+                planner.getDate()
+        );
 
-        assertEquals(oldId, planner.getId());
+        Long oldId = planner.getId();
 
+        // Verify calling it again returns the same planner
+        Planner planner2 =
+                plannerService.getOrCreatePlannerForDate(
+                        user,
+                        LocalDate.now()
+                );
+
+        assertEquals(
+                oldId,
+                planner2.getId()
+        );
     }
 }

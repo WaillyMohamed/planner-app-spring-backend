@@ -1,5 +1,7 @@
 package com.boostcode.plannerappspringbackend.controller;
 
+import com.boostcode.plannerappspringbackend.dto.request.UserRequestDTO;
+import com.boostcode.plannerappspringbackend.dto.response.UserResponseDTO;
 import com.boostcode.plannerappspringbackend.entity.User;
 import com.boostcode.plannerappspringbackend.repository.UserRepository;
 import com.boostcode.plannerappspringbackend.service.UserService;
@@ -33,12 +35,12 @@ public class UserController {
 
     // add mapping for creating users
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public UserResponseDTO createUser(@RequestBody UserRequestDTO user) {
         return userService.createUser(user);
     }
 
     @PutMapping("/{user_id}")
-    public User updateUser(@PathVariable("user_id") long user_id, @RequestBody User user) {
+    public UserResponseDTO updateUser(@PathVariable("user_id") long user_id, @RequestBody UserRequestDTO user) {
         return userService.updateUser(user_id, user);
     }
 

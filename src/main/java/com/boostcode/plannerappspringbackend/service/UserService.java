@@ -1,5 +1,7 @@
 package com.boostcode.plannerappspringbackend.service;
 
+import com.boostcode.plannerappspringbackend.dto.request.UserRequestDTO;
+import com.boostcode.plannerappspringbackend.dto.response.UserResponseDTO;
 import com.boostcode.plannerappspringbackend.entity.User;
 import com.boostcode.plannerappspringbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class UserService {
     // Create the user repository
     private UserRepository userRepository;
 
+
+
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -28,26 +32,25 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserResponseDTO createUser(UserRequestDTO dto) {
+        User user = getUserEntity(dto);
+        User savedUser = userRepository.save(user);
+        return getUserResponseDTO(savedUser);
     }
 
-    public User updateUser(Long id, User UpdatedUser) {
-        // Find existing user
-        Optional<User> user = userRepository.findById(id);
-        // Check if the user exists
-        if(user.isPresent()){
-            // Copy updated fields
-            user.get().setUsername(UpdatedUser.getUsername());
-            user.get().setPassword(UpdatedUser.getPassword());
-            user.get().setEmail(UpdatedUser.getEmail());
-            // Save
-            return userRepository.save(user.get());
-        }
-        else{
-            return userRepository.save(UpdatedUser);
-        }
+    public UserResponseDTO updateUser(Long id, UserRequestDTO userDTO) {
 
+        User user = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        user.setUsername(userDTO.username());
+        user.setPassword(userDTO.password());
+        user.setEmail(userDTO.email());
+
+        User updatedUser = userRepository.save(user);
+
+        return getUserResponseDTO(updatedUser);
     }
 
 
@@ -68,5 +71,17 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    private UserResponseDTO getUserResponseDTO(User user){
+        return new UserResponseDTO(user.getId(), user.getUsername(), user.getEmail());
+    }
+
+    private User getUserEntity(UserRequestDTO userRequestDTO){
+        User user = new User();
+        user.setUsername(userRequestDTO.username());
+        user.setEmail(userRequestDTO.email());
+        user.setPassword(userRequestDTO.password());
+        return user;
+
+    }
 
 }

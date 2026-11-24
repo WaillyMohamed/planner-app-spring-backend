@@ -1,5 +1,6 @@
 package com.boostcode.plannerappspringbackend.controller;
 
+import com.boostcode.plannerappspringbackend.dto.response.PlannerResponseDTO;
 import com.boostcode.plannerappspringbackend.entity.Planner;
 import com.boostcode.plannerappspringbackend.entity.User;
 import com.boostcode.plannerappspringbackend.service.PlannerService;
@@ -24,9 +25,28 @@ public class PlannerController {
         this.userService = userService;
     }
 
-    @GetMapping("/{userId}/{date}")
-    public Planner getPlanner(@PathVariable Long userId, @PathVariable LocalDate date){
-        User user = userService.getUserById(userId);
-        return plannerService.getOrCreatePlannerForDate(user, date);
+    private PlannerResponseDTO createPlannerResponseDTO(Planner planner){
+        return new PlannerResponseDTO(
+                planner.getId(),
+                planner.getDate()
+        );
     }
+
+    @GetMapping("/{userId}/{date}")
+    public PlannerResponseDTO getPlanner(
+            @PathVariable Long userId,
+            @PathVariable LocalDate date) {
+
+        User user = userService.getUserById(userId);
+
+        Planner planner =
+                plannerService.getOrCreatePlannerForDate(
+                        user,
+                        date
+                );
+
+        return createPlannerResponseDTO(planner);
+    }
+
+
 }
