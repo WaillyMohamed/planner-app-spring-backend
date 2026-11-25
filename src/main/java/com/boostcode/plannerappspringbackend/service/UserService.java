@@ -3,10 +3,13 @@ package com.boostcode.plannerappspringbackend.service;
 import com.boostcode.plannerappspringbackend.dto.request.UserRequestDTO;
 import com.boostcode.plannerappspringbackend.dto.response.UserResponseDTO;
 import com.boostcode.plannerappspringbackend.entity.User;
+import com.boostcode.plannerappspringbackend.entity.UserAvailability;
 import com.boostcode.plannerappspringbackend.exception.UserNotFoundException;
 import com.boostcode.plannerappspringbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +78,12 @@ public class UserService {
         return getUserResponseDTO(user);
 
     }
+    public UserResponseDTO updateAvailability(User user,
+                                              UserAvailability userAvailability){
+        user.setAvailability(userAvailability);
+        User updated_user = userRepository.save(user);
+        return getUserResponseDTO(updated_user);
+    }
 
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -92,5 +101,7 @@ public class UserService {
         return user;
 
     }
+
+
 
 }

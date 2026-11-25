@@ -40,6 +40,42 @@ public class TaskService {
         return task;
     }
 
+    public DeadlineTask getDeadlineTaskById(long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() ->
+                        new TaskNotFoundException("Task not found. ID: " + id));
+
+        if (!(task instanceof DeadlineTask)) {
+            throw new IllegalArgumentException("Task is not a deadlineTask");
+        }
+
+        return (DeadlineTask) task;
+    }
+
+    public ScheduledTask getScheduledTaskById(long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() ->
+                        new TaskNotFoundException("Task not found. ID: " + id));
+
+        if (!(task instanceof ScheduledTask)) {
+            throw new IllegalArgumentException("Task is not a ScheduledTask");
+        }
+
+        return (ScheduledTask) task;
+    }
+
+    public DailyTask getDailyTaskById(long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() ->
+                        new TaskNotFoundException("Task not found. ID: " + id));
+
+        if (!(task instanceof DailyTask)) {
+            throw new IllegalArgumentException("Task is not a DailyTask");
+        }
+
+        return (DailyTask) task;
+    }
+
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }

@@ -3,6 +3,7 @@ package com.boostcode.plannerappspringbackend.controller;
 import com.boostcode.plannerappspringbackend.dto.request.UserRequestDTO;
 import com.boostcode.plannerappspringbackend.dto.response.UserResponseDTO;
 import com.boostcode.plannerappspringbackend.entity.User;
+import com.boostcode.plannerappspringbackend.entity.UserAvailability;
 import com.boostcode.plannerappspringbackend.repository.UserRepository;
 import com.boostcode.plannerappspringbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,4 +50,10 @@ public class UserController {
         userService.deleteUserById(user_id);
     }
 
+    @PutMapping("/{user_id}/availability")
+    public UserResponseDTO updateUserAvailability(@PathVariable("user_id") long user_id,
+                                                   @RequestBody UserAvailability userAvailability) {
+        User user = userService.getUserEntityById(user_id);
+        return userService.updateAvailability(user, userAvailability);
+    }
 }
