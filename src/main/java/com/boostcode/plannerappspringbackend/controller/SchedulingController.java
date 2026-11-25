@@ -1,5 +1,6 @@
 package com.boostcode.plannerappspringbackend.controller;
 
+import com.boostcode.plannerappspringbackend.dto.response.ScheduledTaskInstanceResponseDTO;
 import com.boostcode.plannerappspringbackend.entity.ScheduledTaskInstance;
 import com.boostcode.plannerappspringbackend.entity.User;
 import com.boostcode.plannerappspringbackend.entity.task.DailyTask;
@@ -40,7 +41,7 @@ public class SchedulingController {
 
     // Exposing the scheduling engine through a REST endpoint.
     @PostMapping("/deadline/{userID}/{taskID}")
-    public List<ScheduledTaskInstance> scheduleDeadlineTask(
+    public List<ScheduledTaskInstanceResponseDTO> scheduleDeadlineTask(
             @PathVariable("userID") long userID,
             @PathVariable("taskID") long taskID) {
 
@@ -48,13 +49,16 @@ public class SchedulingController {
         User user = userService.getUserEntityById(userID);
         DeadlineTask dt = taskService.getDeadlineTaskById(taskID);
 
-        return schedulingService.placeDeadlineTask(user, dt);
+        return schedulingService.placeDeadlineTask(user, dt)
+                .stream()
+                .map(this::createScheduledTaskInstanceResponseDTO)
+                .toList();
 
     }
 
     // Exposing the scheduling engine through a REST endpoint.
     @PostMapping("/daily/{userID}/{taskID}")
-    public List<ScheduledTaskInstance> scheduleDailyTask(
+    public List<ScheduledTaskInstanceResponseDTO> scheduleDailyTask(
             @PathVariable("userID") long userID,
             @PathVariable("taskID") long taskID) {
 
@@ -62,13 +66,16 @@ public class SchedulingController {
         User user = userService.getUserEntityById(userID);
         DailyTask dt = taskService.getDailyTaskById(taskID);
 
-        return schedulingService.placeDailyTask(user, dt);
+        return schedulingService.placeDailyTask(user, dt)
+                .stream()
+                .map(this::createScheduledTaskInstanceResponseDTO)
+                .toList();
 
     }
 
     // Exposing the scheduling engine through a REST endpoint.
     @PostMapping("/appointment/{userID}/{taskID}")
-    public ScheduledTaskInstance scheduleScheduledTask(
+    public ScheduledTaskInstanceResponseDTO scheduleScheduledTask(
             @PathVariable("userID") long userID,
             @PathVariable("taskID") long taskID) {
 
@@ -76,8 +83,24 @@ public class SchedulingController {
         User user = userService.getUserEntityById(userID);
         ScheduledTask dt = taskService.getScheduledTaskById(taskID);
 
-        return schedulingService.placeScheduledTask(user, dt);
+        return createScheduledTaskInstanceResponseDTO(schedulingService.placeScheduledTask(user, dt));
 
+
+    }
+
+    private ScheduledTaskInstanceResponseDTO createScheduledTaskInstanceResponseDTO(
+            ScheduledTaskInstance instance) {
+
+        return new ScheduledTaskInstanceResponseDTO(
+                instance.getId(),
+                instance.getTask().getTitle(),
+                instance.getDate(),
+                instance.getStartTime(),
+                instance.getEndTime(),
+                instance.getDuration(),
+                instance.getPriority(),
+                instance.getIntensity()
+        );
     }
     
 }

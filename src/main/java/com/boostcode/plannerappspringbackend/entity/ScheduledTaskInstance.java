@@ -1,6 +1,7 @@
 package com.boostcode.plannerappspringbackend.entity;
 
 import com.boostcode.plannerappspringbackend.entity.task.Task;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
