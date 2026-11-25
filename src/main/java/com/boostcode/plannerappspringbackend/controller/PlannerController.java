@@ -37,7 +37,7 @@ public class PlannerController {
             @PathVariable Long userId,
             @PathVariable LocalDate date) {
 
-        User user = userService.getUserById(userId);
+        User user = userService.getUserEntityById((userId));
 
         Planner planner =
                 plannerService.getOrCreatePlannerForDate(

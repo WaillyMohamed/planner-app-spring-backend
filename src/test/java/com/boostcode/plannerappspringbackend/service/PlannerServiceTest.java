@@ -37,7 +37,7 @@ public class PlannerServiceTest {
 
         // Retrieve the actual persisted User entity
         User user =
-                userService.getUserById(userResponseDTO.id());
+                userService.getUserEntityById(userResponseDTO.id());
 
         // Create planner
         Planner planner =

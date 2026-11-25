@@ -4,6 +4,7 @@ import com.boostcode.plannerappspringbackend.entity.task.DailyTask;
 import com.boostcode.plannerappspringbackend.entity.task.DeadlineTask;
 import com.boostcode.plannerappspringbackend.entity.task.ScheduledTask;
 import com.boostcode.plannerappspringbackend.entity.task.Task;
+import com.boostcode.plannerappspringbackend.exception.TaskNotFoundException;
 import com.boostcode.plannerappspringbackend.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
@@ -32,13 +33,11 @@ public class TaskService {
     }
 
     public Task getTaskById(long id) {
-        Optional<Task> task = taskRepository.findById(id);
-        Task tempTask = task.get();
-        if(task.isPresent()) {
-            tempTask = task.get();
-            return tempTask;
-        }
-        return tempTask;
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() ->
+                        new TaskNotFoundException("Task not found. ID: " + id));
+
+        return task;
     }
 
     public List<Task> getAllTasks() {
