@@ -41,15 +41,27 @@ public class SchedulingService {
 
         // Copy the fields from the task
         scheduledInstance.setTask(task);
+        scheduledInstance.setPlanner(planner);
+        scheduledInstance.setDate(date);
+
         scheduledInstance.setStartTime(task.getStartTime());
         scheduledInstance.setEndTime(task.getEndTime());
         scheduledInstance.setDuration(task.getDuration());
         scheduledInstance.setIntensity(task.getIntensity());
         scheduledInstance.setPriority(task.getPriority());
 
+
         // add the instance to the planner
-        planner.addInstance(scheduledInstance);
+
+        if (!conflictService.hasConflictWithPlanner(planner, scheduledInstance)) {
+            planner.getInstances().add(scheduledInstance);
+            plannerService.updatePlannerForDate(planner);
+            return scheduledInstance;
+        }
+        // Add exception for later.
+        System.out.println("There is a conflict within the planner here.");
         return scheduledInstance;
+
     }
 
     public List<ScheduledTaskInstance> placeDailyTask(User user, DailyTask task) {
@@ -62,10 +74,7 @@ public class SchedulingService {
 
             // Get the planner for the current date
             Planner planner = plannerService.getOrCreatePlannerForDate(user, current);
-            System.out.println(
-                    "Instances on planner: "
-                            + planner.getInstances().size()
-            ); // Debugging
+
 
             // Compute the free windows for the day
             List<TimeWindow> timeWindows = computeFreeWindows(planner, user.getAvailability());
@@ -175,11 +184,13 @@ public class SchedulingService {
                         session.setDate(current);
                         session.setStartTime(start);
                         session.setEndTime(end);
+                        session.setPlanner(planner);
 
                         // Check conflicts
                         if (!conflictService.hasConflictWithPlanner(planner, session)) {
                             planner.getInstances().add(session);
                             placed.add(session);
+                            plannerService.updatePlannerForDate(planner);
                             session_per_day += 1; // Add 1 to the number of sessions per day if it is added.
                             placedSession = true;
                             break;
