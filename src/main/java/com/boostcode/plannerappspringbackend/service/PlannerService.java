@@ -35,5 +35,9 @@ public class PlannerService {
 
     }
 
+    public Planner updatePlannerForDate(Planner planner) {
+        return plannerRepository.save(planner);
+    }
+
 
 }

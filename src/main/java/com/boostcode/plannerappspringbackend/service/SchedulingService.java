@@ -11,6 +11,7 @@ import com.boostcode.plannerappspringbackend.entity.task.ScheduledTask;
 import org.springframework.stereotype.Service;
 import com.boostcode.plannerappspringbackend.service.util.TimeWindow;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -52,40 +53,57 @@ public class SchedulingService {
     }
 
     public List<ScheduledTaskInstance> placeDailyTask(User user, DailyTask task) {
-        List<ScheduledTaskInstance> createdInstances = new ArrayList<>();
+        List<ScheduledTaskInstance> createdInstances = task.generateInstances(user.getAvailability());
+        List<ScheduledTaskInstance> scheduledInstances = new ArrayList<>();
+        LocalDate current = task.getStartDate(); // The first day we schedule the daily task for
 
-        LocalDate current = task.getStartDate();
-        LocalDate end = task.getEndDate();
 
-        while (!current.isAfter(end)) { // Loops until we reach the day after the end date
+        for(ScheduledTaskInstance instance : createdInstances) {
+
+            // Get the planner for the current date
             Planner planner = plannerService.getOrCreatePlannerForDate(user, current);
+            System.out.println(
+                    "Instances on planner: "
+                            + planner.getInstances().size()
+            ); // Debugging
 
-            // Create an instance and set its attributes
-            ScheduledTaskInstance instance = new ScheduledTaskInstance();
-            instance.setTask(task);
-            instance.setDate(current);
-            instance.setDuration(task.getDuration());
-            instance.setIntensity(task.getIntensity());
-            instance.setPriority(task.getPriority());
+            // Compute the free windows for the day
+            List<TimeWindow> timeWindows = computeFreeWindows(planner, user.getAvailability());
 
-            // Set the time for the instance
-            instance.setStartTime(null);
-            instance.setEndTime(null);
+            // Try to fit the session in one of the windows
 
-            planner.addInstance(instance);
-            createdInstances.add(instance);
+            for (TimeWindow window : timeWindows) {
 
-            current = current.plusDays(1);
+                if (window.durationInMinutes() >= instance.getDuration()) {
+
+                    // Assign start/end times
+                    LocalTime start = window.getStart();
+                    LocalTime end = start.plusMinutes(instance.getDuration());
+                    // We need to check the end of availability is before ^ this
+
+
+                    instance.setDate(current);
+                    instance.setStartTime(start);
+                    instance.setEndTime(end);
+                    instance.setPlanner(planner);
+
+                    // Check conflicts
+                    if (!conflictService.hasConflictWithPlanner(planner, instance)) {
+                        planner.getInstances().add(instance);
+                        plannerService.updatePlannerForDate(planner);
+                        scheduledInstances.add(instance);
+                        current = current.plusDays(1);
+                        break;
+                    }
+                }
+            }
         }
-
-
-        return createdInstances;
-
+        return scheduledInstances;
 
     }
 
     private List<TimeWindow> computeFreeWindows(Planner planner, UserAvailability availability) {
-
+        // This method returns a List of available times in the planner for tasks to be brought in.
         LocalTime availStart = availability.getStartTime();
         LocalTime availEnd = availability.getEndTime();
 
@@ -160,7 +178,7 @@ public class SchedulingService {
 
                         // Check conflicts
                         if (!conflictService.hasConflictWithPlanner(planner, session)) {
-                            planner.addInstance(session);
+                            planner.getInstances().add(session);
                             placed.add(session);
                             session_per_day += 1; // Add 1 to the number of sessions per day if it is added.
                             placedSession = true;

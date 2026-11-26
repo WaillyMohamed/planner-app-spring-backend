@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,12 +51,18 @@ public class DailyTask extends Task{
     @Override
     public List<ScheduledTaskInstance> generateInstances(UserAvailability availability) {
         ArrayList<ScheduledTaskInstance> instances = new ArrayList<>();
-        ScheduledTaskInstance instance = new ScheduledTaskInstance();
-        instance.setDuration(this.getDuration());
-        instance.setTask(this);
-        instance.setIntensity(this.getIntensity());
-        instance.setPriority(this.getPriority());
-        instances.add(instance);
+        // Get the number of days this daily task will take place for
+        long days = ChronoUnit.DAYS.between(startDate, endDate);
+
+        for(int i = 0; i < (days + 1); i++){
+            ScheduledTaskInstance instance = new ScheduledTaskInstance();
+            instance.setDuration(this.getDuration());
+            instance.setTask(this);
+            instance.setIntensity(this.getIntensity());
+            instance.setPriority(this.getPriority());
+            instances.add(instance);
+        }
+
         return instances;
 
     }

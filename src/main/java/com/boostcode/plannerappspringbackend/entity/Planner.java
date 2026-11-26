@@ -26,11 +26,10 @@ public class Planner {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     @NotNull
-    @OneToMany(mappedBy = "planner")
+    @OneToMany(mappedBy = "planner", cascade = CascadeType.ALL)
     private List<ScheduledTaskInstance> instances = new ArrayList<>();
 
     public LocalDate getDate() {
